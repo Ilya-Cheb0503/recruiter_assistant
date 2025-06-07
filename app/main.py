@@ -3,7 +3,6 @@ from aiogram import Bot, Dispatcher
 from app.config import load_config
 from app.handlers import start, common, form
 
-
 async def main():
     config = load_config()
     bot = Bot(token=config['BOT_TOKEN'])
