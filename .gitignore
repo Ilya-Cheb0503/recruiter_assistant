@@ -1,0 +1,28 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# SQLite DB
+*.db
+*.sqlite3
+
+# dotenv
+.env
+
+# Alembic cache
+alembic/versions/__pycache__/
