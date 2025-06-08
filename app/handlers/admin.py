@@ -1,16 +1,31 @@
 from aiogram import Router, F
-from aiogram.types import Message, InputFile
+from aiogram.types import Message, InputFile, CallbackQuery
 from app.config import load_config
+
+from keyboards.inline.menu import get_admin_dashboard
 
 router = Router()
 config = load_config()
-admin_ids = list(map(int, config['ADMIN_IDS'].split(',')))
+admin_ids = list(map(int, config['ADMINS'].split(',')))
 
-@router.message(F.text.lower() == 'метрика')
-async def metrics(msg: Message):
-    if msg.from_user.id not in admin_ids:
-        return await msg.answer('Нет доступа')
+
+
+@router.callback_query(F.data == 'admin_panel')
+async def admin_panel_handler(callback: CallbackQuery):
+    await callback.answer()
+    await callback.message.edit_text("Панель администратора", reply_markup=get_admin_dashboard())
+
+
+@router.callback_query(F.data == 'send_broadcast')
+async def admin_panel_handler(callback: CallbackQuery):
+    await callback.answer()
+    await callback.message.edit_text("Рассылка *пока не подключена", reply_markup=get_admin_dashboard())
+
+
+@router.callback_query(F.data == 'metrics')
+async def admin_panel_handler(callback: CallbackQuery):
+    await callback.answer()
+    if callback.from_user.id not in admin_ids:
+        return await callback.answer('Нет доступа')
     path = 'reports/metrics.txt'
-    with open(path, 'w', encoding='utf-8') as f:
-        f.write('Пользователи: 123\nЗапросы: 456\nКлючевые слова: resume, python, sales')
-    await msg.answer_document(InputFile(path))
+    await callback.message.edit_text("Метрика разрабатывается гномами по ночам", reply_markup=get_admin_dashboard())
