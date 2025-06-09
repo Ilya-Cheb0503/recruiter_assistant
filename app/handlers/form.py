@@ -6,7 +6,7 @@ from app.keyboards.agreement import get_agreement_kb
 from app.states.form import FormStates
 from app.database.models import save_user_data
 
-from app.keyboards.reply.form_keyboard import region_button, experience_button, study_level_button, confim_button
+from app.keyboards.reply.form_keyboard import region_button, experience_button, education_level_button, confim_button
 
 router = Router()
 
@@ -39,38 +39,38 @@ async def get_name(msg: Message, state: FSMContext):
     await state.set_state(FormStates.waiting_phone)
 
 @router.message(FormStates.waiting_phone)
-async def get_name(msg: Message, state: FSMContext):
+async def get_phone_number(msg: Message, state: FSMContext):
     await state.update_data(number=msg.text)
     await msg.answer('Ваш электронный адрес:')
     await state.set_state(FormStates.waiting_email)
 
 @router.message(FormStates.waiting_email)
-async def get_name(msg: Message, state: FSMContext):
+async def get_email(msg: Message, state: FSMContext):
     await state.update_data(email=msg.text)
     await msg.answer('Выбранный регион поиска:', reply_markup=region_button())
     await state.set_state(FormStates.waiting_region)
 
 @router.message(FormStates.waiting_region)
-async def get_name(msg: Message, state: FSMContext):
+async def get_user_region(msg: Message, state: FSMContext):
     await state.update_data(region=msg.text)
     await msg.answer('Желаемая должность:')
     await state.set_state(FormStates.waiting_position)
 
 @router.message(FormStates.waiting_position)
-async def get_name(msg: Message, state: FSMContext):
+async def get_position(msg: Message, state: FSMContext):
     await state.update_data(position=msg.text)
     await msg.answer('Ваш стаж:', reply_markup=experience_button())
     await state.set_state(FormStates.waiting_experience)
 
 @router.message(FormStates.waiting_experience)
-async def get_name(msg: Message, state: FSMContext):
+async def get_experience(msg: Message, state: FSMContext):
     await state.update_data(experience=msg.text)
-    await msg.answer('Ваш уровень образования:', reply_markup=study_level_button())
-    await state.set_state(FormStates.waiting_study_level)
+    await msg.answer('Ваш уровень образования:', reply_markup=education_level_button())
+    await state.set_state(FormStates.waiting_education_level)
 
-@router.message(FormStates.waiting_study_level)
-async def get_name(msg: Message, state: FSMContext):
-    await state.update_data(study_level=msg.text)
+@router.message(FormStates.waiting_education_level)
+async def check_user_form(msg: Message, state: FSMContext):
+    await state.update_data(education_level=msg.text)
     data = await state.get_data()
 
     await msg.answer(
@@ -94,14 +94,14 @@ Email:
 {data['experience']}
 
 Образование:
-{data['study_level']}
+{data['education_level']}
     ''',
     reply_markup=confim_button()
     )
     await state.set_state(FormStates.waiting_confirm)
 
-@router.message(FormStates.waiting_phone)
-async def get_phone(msg: Message, state: FSMContext):
+@router.message(FormStates.waiting_confirm)
+async def wait_confirmation(msg: Message, state: FSMContext):
     data = await state.get_data()
     await save_user_data(msg.from_user.id, data['name'], msg.text)
     await msg.answer('Спасибо! Анкета заполнена.')

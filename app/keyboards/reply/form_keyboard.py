@@ -31,7 +31,7 @@ def experience_button() -> ReplyKeyboardMarkup:
         one_time_keyboard=True  # клавиатура не исчезает после нажатия
     )
 
-def study_level_button() -> ReplyKeyboardMarkup:
+def education_level_button() -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
         keyboard=[
             [KeyboardButton(text="Высшее образование")],

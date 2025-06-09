@@ -8,5 +8,5 @@ class FormStates(StatesGroup):
     waiting_region = State()
     waiting_position = State()
     waiting_experience = State()
-    waiting_study_level = State()
+    waiting_education_level = State()
     waiting_confirm = State()
