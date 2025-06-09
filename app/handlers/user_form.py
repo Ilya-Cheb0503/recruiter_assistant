@@ -3,7 +3,7 @@ from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, FSInputFile
 from aiogram.fsm.context import FSMContext
 from app.keyboards.agreement import get_agreement_kb
-from app.states.form import FormStates
+from app.states.state_user_form import FormStates
 from app.database.models import save_user_data
 
 from app.keyboards.reply.form_keyboard import region_button, experience_button, education_level_button, confim_button
