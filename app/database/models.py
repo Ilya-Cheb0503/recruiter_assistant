@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy import Column, Integer, String, Text, select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
@@ -21,8 +21,21 @@ class User(Base):
 
 async def save_user_data(tg_id: int, name: str, phone: str):
     async with async_session() as session:
-        user = User(tg_id=tg_id, name=name, phone=phone)
-        session.add(user)
+        # Поиск пользователя по tg_id
+        result = await session.execute(
+            select(User).where(User.tg_id == tg_id)
+        )
+        user = result.scalar_one_or_none()
+
+        if user:
+            # Пользователь найден — обновляем
+            user.name = name
+            user.phone = phone
+        else:
+            # Пользователь не найден — создаём нового
+            user = User(tg_id=tg_id, name=name, phone=phone)
+            session.add(user)
+
         await session.commit()
 
 

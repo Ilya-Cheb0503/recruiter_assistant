@@ -5,10 +5,9 @@ import re
 import aiohttp
 from sqlalchemy import select
 
+from app.config import load_config
 from app.database.models import Vacancy
 from app.database.session import async_session
-
-from app.config import load_config
 
 config = load_config()
 

@@ -1,6 +1,7 @@
 from aiogram import F, Router
 from aiogram.types import CallbackQuery, Message
-from keyboards.inline.menu import get_main_menu, get_job_seeking_menu, get_job_by_categories_menu
+from keyboards.inline.menu import (get_job_by_categories_menu,
+                                   get_job_seeking_menu, get_main_menu)
 
 router = Router()
 
