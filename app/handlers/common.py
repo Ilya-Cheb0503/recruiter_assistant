@@ -1,7 +1,6 @@
-from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
-
-from keyboards.inline.menu import get_main_menu
+from aiogram import F, Router
+from aiogram.types import CallbackQuery, Message
+from keyboards.inline.menu import get_main_menu, get_job_seeking_menu
 
 router = Router()
 
@@ -13,7 +12,7 @@ async def help_cmd(msg: Message):
 @router.callback_query(F.data == 'job_search')
 async def job_search_handler(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text("Вакансии", reply_markup=get_main_menu(callback.from_user.id))
+    await callback.message.edit_text("Вакансии", reply_markup=get_job_seeking_menu())
 
 
 @router.callback_query(F.data == 'about_company')

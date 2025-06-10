@@ -1,9 +1,10 @@
-from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery, FSInputFile
+from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
+from aiogram.types import CallbackQuery, FSInputFile, Message
+
+from app.database.models import save_user_data
 from app.keyboards.agreement import get_agreement_kb
 from app.states.form import FormStates
-from app.database.models import save_user_data
 
 router = Router()
 

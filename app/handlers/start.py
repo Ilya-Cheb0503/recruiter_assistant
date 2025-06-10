@@ -1,6 +1,5 @@
-from aiogram import Router, F
+from aiogram import F, Router
 from aiogram.types import Message
-
 from keyboards.inline.menu import get_main_menu
 
 router = Router()

@@ -1,5 +1,6 @@
-from aiogram import Router, F
-from aiogram.types import Message, InputFile
+from aiogram import F, Router
+from aiogram.types import InputFile, Message
+
 from app.config import load_config
 
 router = Router()
