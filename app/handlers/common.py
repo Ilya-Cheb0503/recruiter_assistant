@@ -1,7 +1,11 @@
 from aiogram import F, Router
 from aiogram.types import CallbackQuery, Message
 from keyboards.inline.menu import (get_admin_dashboard, get_job_seeking_menu,
-                                   get_main_menu)
+                                   get_main_menu, get_about_company_menu)
+from bot_text.main_menu import welcome_message
+from bot_text.about_company import main_directions_text, compnies_enterprises_text, advantages_text, about_company_text
+from bot_text.contacts import contact_info_text
+from bot_text.social_links import social_links_text
 
 router = Router()
 
@@ -14,7 +18,7 @@ async def help_cmd(msg: Message):
 async def main_menu(callback: CallbackQuery):
     await callback.answer()
     await callback.message.edit_text(
-        'Привет! Я помощник рекрутера.',
+        welcome_message,
         reply_markup=get_main_menu(callback.from_user.id)
     )
 
@@ -28,32 +32,32 @@ async def job_search_handler(callback: CallbackQuery):
 @router.callback_query(F.data == 'about_company')
 async def about_company_handler(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text("О компании", reply_markup=get_about_company_menu())
+    await callback.message.edit_text(about_company_text, reply_markup=get_about_company_menu())
 
 @router.callback_query(F.data == 'advantages')
 async def about_company_handler(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text("Преимущества", reply_markup=get_about_company_menu())
+    await callback.message.edit_text(advantages_text, reply_markup=get_about_company_menu())
 
 @router.callback_query(F.data == 'compnies_enterprises')
 async def about_company_handler(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text("Предприяттия", reply_markup=get_about_company_menu())\
+    await callback.message.edit_text(compnies_enterprises_text, reply_markup=get_about_company_menu())
 
 
 @router.callback_query(F.data == 'main_directions')
 async def about_company_handler(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text("Действительно основные", reply_markup=get_about_company_menu())
+    await callback.message.edit_text(main_directions_text, reply_markup=get_about_company_menu())
 
 
 @router.callback_query(F.data == 'contact_info')
 async def contact_info_handler(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text("Контакты", reply_markup=get_main_menu(callback.from_user.id))
+    await callback.message.edit_text(contact_info_text, reply_markup=get_main_menu(callback.from_user.id))
 
 
 @router.callback_query(F.data == 'social_links')
 async def social_links_handler(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text("Соц сети", reply_markup=get_main_menu(callback.from_user.id))
+    await callback.message.edit_text(social_links_text, reply_markup=get_main_menu(callback.from_user.id))
