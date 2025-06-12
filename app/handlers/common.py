@@ -1,12 +1,9 @@
 from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
-from bot_text.about_company import (about_company_text, advantages_text,
-                                    compnies_enterprises_text,
-                                    main_directions_text)
+from bot_text.about_company import (about_company_text, advantages_text)
 from bot_text.contacts import contact_info_text
 from bot_text.main_menu import welcome_message
-from bot_text.social_links import social_links_text
 from keyboards.inline.menu import (get_about_company_menu, get_admin_dashboard,
                                    get_job_seeking_menu, get_main_menu,
                                    get_region_selection_keyboard)
@@ -59,16 +56,16 @@ async def about_company_handler(callback: CallbackQuery):
     await callback.answer()
     await callback.message.edit_text(advantages_text, reply_markup=get_about_company_menu())
 
-@router.callback_query(F.data == 'compnies_enterprises')
-async def about_company_handler(callback: CallbackQuery):
-    await callback.answer()
-    await callback.message.edit_text(compnies_enterprises_text, reply_markup=get_about_company_menu())
+# @router.callback_query(F.data == 'compnies_enterprises')
+# async def about_company_handler(callback: CallbackQuery):
+#     await callback.answer()
+#     await callback.message.edit_text(compnies_enterprises_text, reply_markup=get_about_company_menu())
 
 
-@router.callback_query(F.data == 'main_directions')
-async def about_company_handler(callback: CallbackQuery):
-    await callback.answer()
-    await callback.message.edit_text(main_directions_text, reply_markup=get_about_company_menu())
+# @router.callback_query(F.data == 'main_directions')
+# async def about_company_handler(callback: CallbackQuery):
+#     await callback.answer()
+#     await callback.message.edit_text(main_directions_text, reply_markup=get_about_company_menu())
 
 
 @router.callback_query(F.data == 'contact_info')
@@ -77,7 +74,7 @@ async def contact_info_handler(callback: CallbackQuery):
     await callback.message.edit_text(contact_info_text, reply_markup=get_main_menu(callback.from_user.id))
 
 
-@router.callback_query(F.data == 'social_links')
-async def social_links_handler(callback: CallbackQuery):
-    await callback.answer()
-    await callback.message.edit_text(social_links_text, reply_markup=get_main_menu(callback.from_user.id))
+# @router.callback_query(F.data == 'social_links')
+# async def social_links_handler(callback: CallbackQuery):
+#     await callback.answer()
+#     await callback.message.edit_text(social_links_text, reply_markup=get_main_menu(callback.from_user.id))
