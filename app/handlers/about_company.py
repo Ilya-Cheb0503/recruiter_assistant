@@ -1,0 +1,13 @@
+from aiogram import F, Router
+from aiogram.types import CallbackQuery
+from bot_text.about_company import advantages_text
+from keyboards.inline.menu import get_about_company_menu
+
+
+router = Router()
+
+
+@router.callback_query(F.data == 'advantages')
+async def advantages_handler(callback: CallbackQuery):
+    await callback.answer()
+    await callback.message.edit_text(advantages_text, reply_markup=get_about_company_menu())
