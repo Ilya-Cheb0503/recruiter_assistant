@@ -42,10 +42,7 @@ async def save_user_data(
             select(User).where(User.tg_id == tg_id)
         )
         user = result.scalar_one_or_none()
-        print(f"User found: {user}")
         # Если пользователь уже существует, обновляем его данные
-        print(f'user_phone: {phone}, user_email: {email}, user_region: {region}, user_position: {position}, user_experience: {experience}, user_education: {education}')
-        print(f"Updating user {tg_id} with data: {name}, {phone}, {email}, {region}, {position}, {experience}, {education}")
         if user:
             user.name = name or user.name
             user.phone = phone or user.phone

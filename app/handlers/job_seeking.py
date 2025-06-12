@@ -1,17 +1,31 @@
 from aiogram import F, Router
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
 
 from keyboards.inline.menu import (get_job_by_categories_menu,
-                                   get_job_seeking_menu, get_main_menu)
+                                   get_job_seeking_menu)
 from services.vacancy_service import get_all_vacancies
 from utils.vacancy_sender import send_vacancy_batch
 from services.vacancy_service import get_vacancies_by_keywords_list, get_vacancies_no_experience
 from app.keywords.categories_keywords import keywords
 
+
 router = Router()
 
 
+@router.callback_query(F.data.startswith("region_"))
+async def region_selected_handler(callback: CallbackQuery, state: FSMContext):
+    await callback.answer()
+
+    region = callback.data.replace("region_", "")
+    await state.update_data(region=region)  # сохраняем регион в FSM
+
+    await callback.message.edit_text(
+        f"Выбран регион: {region}\nТеперь выберите, как искать вакансии:",
+        reply_markup=get_job_seeking_menu()
+    )
+
+    
 @router.callback_query(F.data == 'categories_vacancies')
 async def vacancies_by_keywords_handler(callback: CallbackQuery):
     await callback.answer()
