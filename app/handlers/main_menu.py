@@ -7,6 +7,7 @@ from keyboards.inline.menu import (get_about_company_menu, get_main_menu,
                                    get_region_selection_keyboard)
 from states.state_user_form import FormStates
 from keyboards.agreement import get_agreement_kb
+from bot_text.social_links import social_links_text
 
 
 
@@ -31,10 +32,10 @@ async def about_company_handler(callback: CallbackQuery):
 
 
 # Обработчик кнопки "Частые вопросы"
-@router.callback_query(F.data == 'frequent_questions')
+@router.callback_query(F.data == 'social_links')
 async def frequent_questions_handler(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text("Тут будут частые вопросы", reply_markup=get_main_menu(callback.from_user.id))
+    await callback.message.edit_text(social_links_text, reply_markup=get_main_menu(callback.from_user.id))
 
 
 # Обработчик кнопки "Отправить анкету"

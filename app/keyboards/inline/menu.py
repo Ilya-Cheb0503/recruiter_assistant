@@ -11,7 +11,7 @@ def get_main_menu(user_id: int) -> InlineKeyboardMarkup:
     buttons =[
         [InlineKeyboardButton(text="Ищу работу", callback_data="job_search")],
         [InlineKeyboardButton(text="О компании", callback_data="about_company")],
-        [InlineKeyboardButton(text="Частые вопросы", callback_data="frequent_questions")],
+        [InlineKeyboardButton(text="Социальные сети", callback_data="social_links")],
         [InlineKeyboardButton(text="Отправь анкету", callback_data="submit_form")],
         [InlineKeyboardButton(text="Контактная информация", callback_data="contact_info")]
     ]
@@ -48,8 +48,8 @@ def get_job_by_categories_menu() -> InlineKeyboardMarkup:
 def get_about_company_menu() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Преимущества", callback_data="advantages")],
-        # [InlineKeyboardButton(text="Предприятия ГЭХИА", callback_data="compnies_enterprises")],
-        # [InlineKeyboardButton(text="Основные направления деятельности", callback_data="main_directions")],
+        [InlineKeyboardButton(text="Предприятия ГЭХИА", callback_data="compnies_enterprises")],
+        [InlineKeyboardButton(text="Основные направления деятельности", callback_data="main_directions")],
         [InlineKeyboardButton(text="🔙 В главное меню", callback_data="main_menu")]
     ])
 
