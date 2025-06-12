@@ -5,6 +5,8 @@ from sqlalchemy import Column, Integer, String, Text, select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
+from app.database.session import async_session
+
 load_dotenv()
 DATABASE_URL = os.getenv('DB_URL')
 
@@ -14,30 +16,58 @@ async_session = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession
 
 class User(Base):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
-    tg_id = Column(Integer, unique=True)
-    name = Column(String)
-    phone = Column(String)
 
-async def save_user_data(tg_id: int, name: str, phone: str):
+    tg_id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=True)  # ФИО
+    phone = Column(String, nullable=True)
+    email = Column(String, nullable=True)
+    region = Column(String, nullable=True)  # Предпочтительный регион поиска
+    position = Column(String, nullable=True)  # Должность
+    experience = Column(String, nullable=True)  # Опыт работы
+    education = Column(String, nullable=True)  # Образование
+
+async def save_user_data(
+    
+    tg_id: int,
+    name: str = None,
+    phone: str = None,
+    email: str = None,
+    region: str = None,
+    position: str = None,
+    experience: str = None,
+    education: str = None
+):
     async with async_session() as session:
-        # Поиск пользователя по tg_id
         result = await session.execute(
             select(User).where(User.tg_id == tg_id)
         )
         user = result.scalar_one_or_none()
-
+        print(f"User found: {user}")
+        # Если пользователь уже существует, обновляем его данные
+        print(f'user_phone: {phone}, user_email: {email}, user_region: {region}, user_position: {position}, user_experience: {experience}, user_education: {education}')
+        print(f"Updating user {tg_id} with data: {name}, {phone}, {email}, {region}, {position}, {experience}, {education}")
         if user:
-            # Пользователь найден — обновляем
-            user.name = name
-            user.phone = phone
+            user.name = name or user.name
+            user.phone = phone or user.phone
+            user.email = email or user.email
+            user.region = region or user.region
+            user.position = position or user.position
+            user.experience = experience or user.experience
+            user.education = education or user.education
         else:
-            # Пользователь не найден — создаём нового
-            user = User(tg_id=tg_id, name=name, phone=phone)
+            user = User(
+                tg_id=tg_id,
+                name=name,
+                phone=phone,
+                email=email,
+                region=region,
+                position=position,
+                experience=experience,
+                education=education
+            )
             session.add(user)
 
         await session.commit()
-
 
 
 

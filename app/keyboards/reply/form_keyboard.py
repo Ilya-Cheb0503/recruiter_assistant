@@ -1,4 +1,5 @@
-from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
+from aiogram.types import (InlineKeyboardButton, InlineKeyboardMarkup,
+                           KeyboardButton, ReplyKeyboardMarkup)
 
 
 def region_button() -> ReplyKeyboardMarkup:
@@ -50,3 +51,17 @@ def confim_button() -> ReplyKeyboardMarkup:
         resize_keyboard=True,  # кнопки адаптируются по ширине
         one_time_keyboard=True  # клавиатура не исчезает после нажатия
     )
+
+
+def get_edit_fields_keyboard() -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="ФИО", callback_data="edit_name")],
+        [InlineKeyboardButton(text="Телефон", callback_data="edit_phone")],
+        [InlineKeyboardButton(text="Email", callback_data="edit_email")],
+        [InlineKeyboardButton(text="Регион", callback_data="edit_region")],
+        [InlineKeyboardButton(text="Должность", callback_data="edit_position")],
+        [InlineKeyboardButton(text="Стаж", callback_data="edit_experience")],
+        [InlineKeyboardButton(text="Образование", callback_data="edit_education")],
+        [InlineKeyboardButton(text="⬅️ Назад", callback_data="back_to_confirm")],
+    ])
+    return keyboard

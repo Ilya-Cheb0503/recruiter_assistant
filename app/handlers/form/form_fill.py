@@ -1,42 +1,20 @@
-from operator import call
-
+# app/handlers/form/form_fill.py
 from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery, FSInputFile, Message
+from aiogram.types import Message, CallbackQuery
 
-from app.database.models import save_user_data
-from app.keyboards.agreement import get_agreement_kb
-from app.keyboards.reply.form_keyboard import (confim_button,
-                                               education_level_button,
-                                               experience_button,
-                                               region_button)
 from app.states.state_user_form import FormStates
-from app.keyboards.inline.form_keyboard import get_edit_fields_keyboard
-
+from app.keyboards.reply.form_keyboard import (
+    region_button,
+    experience_button,
+    education_level_button,
+    get_edit_fields_keyboard
+)
+from app.keyboards.inline.form_keyboard import confim_button
+from app.utils.format_form import format_user_form
+from app.database.models import save_user_data
 
 router = Router()
-
-
-@router.callback_query(F.data == 'submit_form')
-async def job_search_handler(callback: CallbackQuery, state: FSMContext):
-    pdf = FSInputFile('static/agreement.pdf')
-    await callback.answer()
-    await callback.message.answer_document(pdf, caption='Вы согласны с политикой обработки данных?', reply_markup=get_agreement_kb())
-    await state.set_state(FormStates.waiting_agreement)
-
-
-@router.message(F.text.lower() == 'анкета')
-async def ask_agreement(msg: Message, state: FSMContext):
-    pdf = FSInputFile('static/agreement.pdf')
-    await msg.answer_document(pdf, caption='Пожалуйста, ознакомьтесь и согласитесь')
-    await msg.answer('Вы согласны с политикой обработки данных?', reply_markup=get_agreement_kb())
-    await state.set_state(FormStates.waiting_agreement)
-
-@router.callback_query(FormStates.waiting_agreement, F.data == 'agree')
-async def agreed(call: CallbackQuery, state: FSMContext):
-    await call.message.answer('Для начала укажите в сообщении ваши ФИО:')
-    await state.set_state(FormStates.waiting_name)
-    await call.answer()
 
 @router.message(FormStates.waiting_name)
 async def get_name(msg: Message, state: FSMContext):
@@ -78,34 +56,8 @@ async def get_experience(msg: Message, state: FSMContext):
 async def check_user_form(msg: Message, state: FSMContext):
     await state.update_data(education=msg.text)
     data = await state.get_data()
-
-    await msg.answer(
-        text= f'''
-ФИО:
-{data['name']}
-
-Номер телефона:
-{data['phone']}
-
-Email:
-{data['email']}
-
-Регион поиска:
-{data['region']}
-
-Должность:
-{data['position']}
-
-Опыт работы:
-{data['experience']}
-
-Образование:
-{data['education']}
-    ''',
-    reply_markup=confim_button()
-    )
+    await msg.answer(format_user_form(data), reply_markup=confim_button())
     await state.set_state(FormStates.waiting_confirm)
-
 
 @router.callback_query(F.data == "form_confirm", FormStates.waiting_confirm)
 async def confirm_form(callback: CallbackQuery, state: FSMContext):
@@ -115,13 +67,11 @@ async def confirm_form(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     await callback.answer()
 
-
 @router.callback_query(F.data == "form_edit", FormStates.waiting_confirm)
 async def edit_form(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text("Что вы хотите изменить?", reply_markup=get_edit_fields_keyboard())
     await state.set_state(FormStates.waiting_field_to_edit)
     await callback.answer()
-
 
 @router.callback_query(F.data.startswith("edit_"), FormStates.waiting_field_to_edit)
 async def handle_field_choice(callback: CallbackQuery, state: FSMContext):
@@ -146,7 +96,6 @@ async def handle_field_choice(callback: CallbackQuery, state: FSMContext):
     await state.set_state(FormStates.waiting_field_value)
     await callback.answer()
 
-
 @router.message(FormStates.waiting_field_value)
 async def receive_new_value(msg: Message, state: FSMContext):
     data = await state.get_data()
@@ -156,38 +105,13 @@ async def receive_new_value(msg: Message, state: FSMContext):
         await state.update_data({field: msg.text})
         await msg.answer(f"Поле «{field}» обновлено ✅")
 
-    # Показываем обновлённую анкету снова
     data = await state.get_data()
-    await msg.answer(
-        text=f'''
-ФИО: {data.get('name')}
-Телефон: {data.get('phone')}
-Email: {data.get('email')}
-Регион: {data.get('region')}
-Должность: {data.get('position')}
-Опыт работы: {data.get('experience')}
-Образование: {data.get('education')}
-        ''',
-        reply_markup=confim_button()
-    )
+    await msg.answer(format_user_form(data), reply_markup=confim_button())
     await state.set_state(FormStates.waiting_confirm)
-
 
 @router.callback_query(F.data == "back_to_confirm", FormStates.waiting_field_to_edit)
 async def back_to_confirmation(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
-    await callback.message.edit_text(
-        text=f'''
-ФИО: {data.get('name')}
-Телефон: {data.get('phone')}
-Email: {data.get('email')}
-Регион: {data.get('region')}
-Должность: {data.get('position')}
-Опыт работы: {data.get('experience')}
-Образование: {data.get('education')}
-        ''',
-        reply_markup=confim_button()
-    )
+    await callback.message.edit_text(format_user_form(data), reply_markup=confim_button())
     await state.set_state(FormStates.waiting_confirm)
     await callback.answer()
-

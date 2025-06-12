@@ -1,13 +1,15 @@
 from aiogram.fsm.state import State, StatesGroup
 
-
 class FormStates(StatesGroup):
-    waiting_agreement = State()
-    waiting_name = State()
-    waiting_phone = State()
-    waiting_email = State()
-    waiting_region = State()
-    waiting_position = State()
-    waiting_experience = State()
-    waiting_education_level = State()
-    waiting_confirm = State()
+    waiting_agreement = State()          # Согласие на обработку
+    waiting_name = State()               # Ввод ФИО
+    waiting_phone = State()              # Ввод телефона
+    waiting_email = State()              # Ввод email
+    waiting_region = State()             # Ввод региона
+    waiting_position = State()           # Ввод должности
+    waiting_experience = State()         # Ввод опыта
+    waiting_education_level = State()    # Ввод образования
+
+    waiting_confirm = State()            # Подтверждение анкеты
+    waiting_field_to_edit = State()      # Пользователь выбрал, что редактировать
+    waiting_field_value = State()        # Пользователь вводит новое значение поля
