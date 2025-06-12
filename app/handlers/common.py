@@ -1,7 +1,8 @@
 from aiogram import F, Router
+from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 from keyboards.inline.menu import (get_admin_dashboard, get_job_seeking_menu,
-                                   get_main_menu)
+                                   get_main_menu, get_about_company_menu, get_region_selection_keyboard)
 
 router = Router()
 
@@ -22,7 +23,23 @@ async def main_menu(callback: CallbackQuery):
 @router.callback_query(F.data == 'job_search')
 async def job_search_handler(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text("Вакансии", reply_markup=get_job_seeking_menu())
+    await callback.message.edit_text(
+        "Выберите регион для поиска вакансий:",
+        reply_markup=get_region_selection_keyboard()
+    )
+
+
+@router.callback_query(F.data.startswith("region_"))
+async def region_selected_handler(callback: CallbackQuery, state: FSMContext):
+    await callback.answer()
+
+    region = callback.data.replace("region_", "")
+    await state.update_data(region=region)  # сохраняем регион в FSM
+
+    await callback.message.edit_text(
+        f"Выбран регион: {region}\nТеперь выберите, как искать вакансии:",
+        reply_markup=get_job_seeking_menu()
+    )
 
 
 @router.callback_query(F.data == 'about_company')

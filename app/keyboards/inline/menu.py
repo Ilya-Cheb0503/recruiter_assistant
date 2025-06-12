@@ -24,9 +24,9 @@ def get_main_menu(user_id: int) -> InlineKeyboardMarkup:
 
 def get_job_seeking_menu() -> InlineKeyboardMarkup:
     buttons =[
-        [InlineKeyboardButton(text="Все вакансии", callback_data="all_vacancies")],
-        [InlineKeyboardButton(text="Вакансии по направлениям деятельности", callback_data="vacancies_by_keywords")],
-        [InlineKeyboardButton(text="Без опыта работы", callback_data="vacancies_no_experience")],
+        [InlineKeyboardButton(text="Все вакансии", callback_data="vacancies_all")],
+        [InlineKeyboardButton(text="Вакансии по направлениям деятельности", callback_data="categories_vacancies")],
+        [InlineKeyboardButton(text="Без опыта работы", callback_data="vacancies_noexp")],
         [InlineKeyboardButton(text="Главное меню", callback_data="main_menu")]
     ]
 
@@ -35,10 +35,10 @@ def get_job_seeking_menu() -> InlineKeyboardMarkup:
 
 def get_job_by_categories_menu() -> InlineKeyboardMarkup:
     buttons =[
-        [InlineKeyboardButton(text="Руководители", callback_data="vacancies_with_management")],
-        [InlineKeyboardButton(text="ИТР", callback_data="vacancies_with_engineering")],
-        [InlineKeyboardButton(text="Рабочие", callback_data="vacancies_with_workers")],
-        [InlineKeyboardButton(text="Другие категории", callback_data="vacancies_with_other")],
+        [InlineKeyboardButton(text="Руководители", callback_data="vacancies_management")],
+        [InlineKeyboardButton(text="ИТР", callback_data="vacancies_engineering")],
+        [InlineKeyboardButton(text="Рабочие", callback_data="vacancies_workers")],
+        [InlineKeyboardButton(text="Другие категории", callback_data="vacancies_other")],
         [InlineKeyboardButton(text="Назад", callback_data="job_search")]
     ]
 
@@ -58,5 +58,20 @@ def get_admin_dashboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Рассылка", callback_data="send_broadcast")],
         [InlineKeyboardButton(text="Метрика", callback_data="metrics")],
+        [InlineKeyboardButton(text="🔙 В главное меню", callback_data="main_menu")]
+    ])
+
+
+def get_region_selection_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="Санкт-Петербург", callback_data="region_Санкт-Петербург")],
+        [InlineKeyboardButton(text="Москва", callback_data="region_Москва")],
+        [InlineKeyboardButton(text="Московская Область", callback_data="region_Московская Область")],
+        [InlineKeyboardButton(text="Тюмень", callback_data="region_Тюмень")],
+        [InlineKeyboardButton(text="Брянск", callback_data="region_Брянск")],
+        [InlineKeyboardButton(text="Щекино, Тульская обл.", callback_data="region_Щекино")],
+        [InlineKeyboardButton(text="Камышин, Волгоградская обл.", callback_data="region_Камышин")],
+        [InlineKeyboardButton(text="Екатеринбург", callback_data="region_Екатеринбург")],
+        [InlineKeyboardButton(text="Узловая", callback_data="region_Узловая")],
         [InlineKeyboardButton(text="🔙 В главное меню", callback_data="main_menu")]
     ])
