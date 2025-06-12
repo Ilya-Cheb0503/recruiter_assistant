@@ -1,5 +1,5 @@
 from aiogram import F, Router
-from aiogram.types import CallbackQuery, InputFile, Message
+from aiogram.types import CallbackQuery
 from keyboards.inline.menu import get_admin_dashboard
 
 from app.config import load_config
