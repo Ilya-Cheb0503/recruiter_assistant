@@ -62,7 +62,15 @@ async def check_user_form(msg: Message, state: FSMContext):
 @router.callback_query(F.data == "form_confirm", FormStates.waiting_confirm)
 async def confirm_form(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
-    await save_user_data(callback.from_user.id, **data)
+
+    # Фильтрация только нужных полей
+    allowed_fields = {
+        "name", "phone", "email", "region",
+        "position", "experience", "education"
+    }
+    filtered_data = {k: v for k, v in data.items() if k in allowed_fields}
+
+    await save_user_data(callback.from_user.id, **filtered_data)
     await callback.message.edit_text("Спасибо! Анкета заполнена ✅")
     await state.clear()
     await callback.answer()
