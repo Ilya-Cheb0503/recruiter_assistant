@@ -8,6 +8,9 @@ def get_vacancy_keyboard(url: str) -> InlineKeyboardMarkup:
         [
         InlineKeyboardButton(text="Откликнуться", callback_data="respond_direct"),
         ],
+        # [
+        # InlineKeyboardButton(text="Получить консультацию специалиста 📞", url=url)
+        # ]
         [
         InlineKeyboardButton(text="Через сайт", url=url)
         ]
@@ -17,7 +20,7 @@ def get_pagination_keyboard(current: int, total: int, category: str) -> InlineKe
     buttons = []
 
     if current < total:
-        buttons.append([InlineKeyboardButton(text="Еще 5", callback_data=f"vacancies_{category}_{current}")])
+        buttons.append([InlineKeyboardButton(text="Продолжить", callback_data=f"vacancies_{category}_{current}")])
 
     buttons.append([InlineKeyboardButton(text="Достаточно", callback_data="main_menu")])
 
@@ -32,7 +35,10 @@ async def send_vacancy_batch(
     category: str = "all"
 ) -> None:
     if not vacancies:
-        await message.answer("По вашему запросу вакансий не найдено.")
+        await message.answer(
+            "Если вы пока не нашли нужную вакансию, пожалуйста, оставьте свои контакты в разделе «Отправить анкету».\n"
+            "С Вами обязательно свяжутся, когда появится подходящая вакансия."
+            )
         return
 
     batch = vacancies[start_index:start_index + VACANCIES_PER_PAGE]
