@@ -42,15 +42,15 @@ def education_level_button() -> ReplyKeyboardMarkup:
         one_time_keyboard=True  # клавиатура не исчезает после нажатия
     )
 
-def confim_button() -> ReplyKeyboardMarkup:
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text="Все верно!")],
-            [KeyboardButton(text="Редактировать")]
-        ],
-        resize_keyboard=True,  # кнопки адаптируются по ширине
-        one_time_keyboard=True  # клавиатура не исчезает после нажатия
-    )
+# def confim_button() -> ReplyKeyboardMarkup:
+#     return ReplyKeyboardMarkup(
+#         keyboard=[
+#             [KeyboardButton(text="Все верно!")],
+#             [KeyboardButton(text="Редактировать")]
+#         ],
+#         resize_keyboard=True,  # кнопки адаптируются по ширине
+#         one_time_keyboard=True  # клавиатура не исчезает после нажатия
+#     )
 
 
 def get_edit_fields_keyboard() -> InlineKeyboardMarkup:
