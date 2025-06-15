@@ -6,15 +6,13 @@ VACANCIES_PER_PAGE = 5
 def get_vacancy_keyboard(url: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [
-        InlineKeyboardButton(text="Откликнуться", callback_data="respond_direct"),
+            InlineKeyboardButton(text="Откликнуться", callback_data="respond_direct"),
         ],
-        # [
-        # InlineKeyboardButton(text="Получить консультацию специалиста 📞", url=url)
-        # ]
         [
-        InlineKeyboardButton(text="Через сайт", url=url)
+            InlineKeyboardButton(text="Перейти на HH", callback_data=f"go_to_site|{url}")
         ]
-])
+    ])
+
 
 def get_pagination_keyboard(current: int, total: int, category: str) -> InlineKeyboardMarkup:
     buttons = []
@@ -70,3 +68,14 @@ async def send_vacancy_batch(
         text,
         reply_markup=get_pagination_keyboard(viewed, total, category=category)
     )
+
+
+def get_redirect_keyboard(url: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text="Откликнуться", callback_data="respond_direct"),
+        ],
+        [
+            InlineKeyboardButton(text="🔗 Перейти на HH", url=url)
+        ]
+    ])
