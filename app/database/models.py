@@ -1,7 +1,9 @@
 import os
+from datetime import datetime
 
 from dotenv import load_dotenv
-from sqlalchemy import Column, Integer, String, Text, select
+from sqlalchemy import (BigInteger, Column, DateTime, Integer, String, Text,
+                        select)
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
@@ -27,7 +29,7 @@ class User(Base):
     education = Column(String, nullable=True)  # Образование
 
 async def save_user_data(
-    
+
     tg_id: int,
     name: str = None,
     phone: str = None,
@@ -42,10 +44,7 @@ async def save_user_data(
             select(User).where(User.tg_id == tg_id)
         )
         user = result.scalar_one_or_none()
-        print(f"User found: {user}")
         # Если пользователь уже существует, обновляем его данные
-        print(f'user_phone: {phone}, user_email: {email}, user_region: {region}, user_position: {position}, user_experience: {experience}, user_education: {education}')
-        print(f"Updating user {tg_id} with data: {name}, {phone}, {email}, {region}, {position}, {experience}, {education}")
         if user:
             user.name = name or user.name
             user.phone = phone or user.phone
@@ -88,3 +87,12 @@ class Vacancy(Base):
     metro = Column(String, nullable=True)  # Сохраняем как строку, можно сериализовать список
     url = Column(String, nullable=False)
     employer_url = Column(String, nullable=True)
+
+
+class Metric(Base):
+    __tablename__ = "metrics"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(BigInteger)  # Telegram user ID
+    event_type = Column(String, nullable=False)  # Тип события: start, click, respond, send_contacts и т.п.
+    timestamp = Column(DateTime, default=datetime.utcnow)

@@ -13,3 +13,6 @@ class FormStates(StatesGroup):
     waiting_confirm = State()            # Подтверждение анкеты
     waiting_field_to_edit = State()      # Пользователь выбрал, что редактировать
     waiting_field_value = State()        # Пользователь вводит новое значение поля
+    waiting_main_menu = State()          # Переход в главное меню после подтверждения верности анкеты
+
+    waiting_for_new_content = State()  # Ожидание нового контента от администратора
