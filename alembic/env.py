@@ -1,10 +1,12 @@
-from logging.config import fileConfig
-from sqlalchemy import pool
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncConnection
-from alembic import context
 import os
 import sys
+from logging.config import fileConfig
+
 from dotenv import load_dotenv
+from sqlalchemy import pool
+from sqlalchemy.ext.asyncio import AsyncConnection, create_async_engine
+
+from alembic import context
 
 # Добавляем путь к приложению, чтобы импортировать модели
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
