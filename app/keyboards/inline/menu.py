@@ -48,7 +48,7 @@ def get_job_by_categories_menu() -> InlineKeyboardMarkup:
 def get_about_company_menu() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Преимущества", callback_data="advantages")],
-        [InlineKeyboardButton(text="Предприятия ГЭХИА", callback_data="compnies_enterprises")],
+        [InlineKeyboardButton(text="Предприятия ГЭХИА", callback_data="company_enterprises")],
         [InlineKeyboardButton(text="Основные направления деятельности", callback_data="main_directions")],
         [InlineKeyboardButton(text="🔙 В главное меню", callback_data="main_menu")]
     ])
@@ -58,6 +58,7 @@ def get_admin_dashboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Рассылка", callback_data="send_broadcast")],
         [InlineKeyboardButton(text="Метрика", callback_data="metrics")],
+        [InlineKeyboardButton(text="Редакция содержания", callback_data="edit_static_text")],
         [InlineKeyboardButton(text="🔙 В главное меню", callback_data="main_menu")]
     ])
 
