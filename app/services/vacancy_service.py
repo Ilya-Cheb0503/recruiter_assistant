@@ -13,7 +13,6 @@ async def get_all_vacancies(region: str = "Москва") -> list[Vacancy]:
     """
     Возвращает список всех вакансий.
     """
-    print(f'region = {region}')
     async with async_session() as session:
         stmt = select(Vacancy).where(
             Vacancy.region.ilike(f"%{region}%"),
