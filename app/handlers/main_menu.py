@@ -1,13 +1,12 @@
 from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, FSInputFile
-from bot_text.about_company import about_company_text
-from bot_text.contacts import contact_info_text
+
+from app.services.static_content import CONTENT
 from keyboards.inline.menu import (get_about_company_menu, get_main_menu,
                                    get_region_selection_keyboard)
 from states.state_user_form import FormStates
 from keyboards.agreement import get_agreement_kb
-from bot_text.social_links import social_links_text
 
 
 
@@ -28,14 +27,14 @@ async def job_search_handler(callback: CallbackQuery):
 @router.callback_query(F.data == 'about_company')
 async def about_company_handler(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text(about_company_text, reply_markup=get_about_company_menu())
+    await callback.message.edit_text(CONTENT.get('about_company'), reply_markup=get_about_company_menu())
 
 
 # Обработчик кнопки "Частые вопросы"
 @router.callback_query(F.data == 'social_links')
 async def frequent_questions_handler(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text(social_links_text, reply_markup=get_main_menu(callback.from_user.id))
+    await callback.message.edit_text(CONTENT.get('social_links'), reply_markup=get_main_menu(callback.from_user.id))
 
 
 # Обработчик кнопки "Отправить анкету"
@@ -55,4 +54,4 @@ async def job_search_handler(callback: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == 'contact_info')
 async def contact_info_handler(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text(contact_info_text, reply_markup=get_main_menu(callback.from_user.id))
+    await callback.message.edit_text(CONTENT.get('contact_info'), reply_markup=get_main_menu(callback.from_user.id))
