@@ -1,7 +1,9 @@
 import os
+from datetime import datetime
 
 from dotenv import load_dotenv
-from sqlalchemy import Column, Integer, String, Text, select
+from sqlalchemy import (BigInteger, Column, DateTime, Integer, String, Text,
+                        select)
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
@@ -88,3 +90,12 @@ class Vacancy(Base):
     metro = Column(String, nullable=True)  # Сохраняем как строку, можно сериализовать список
     url = Column(String, nullable=False)
     employer_url = Column(String, nullable=True)
+
+
+class Metric(Base):
+    __tablename__ = "metrics"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(BigInteger)  # Telegram user ID
+    event_type = Column(String, nullable=False)  # Тип события: start, click, respond, send_contacts и т.п.
+    timestamp = Column(DateTime, default=datetime.utcnow)
