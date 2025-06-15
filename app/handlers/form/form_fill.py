@@ -1,18 +1,17 @@
 # app/handlers/form/form_fill.py
 from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import CallbackQuery, Message
 
-from app.states.state_user_form import FormStates
-from app.keyboards.reply.form_keyboard import (
-    region_button,
-    experience_button,
-    education_level_button,
-    get_edit_fields_keyboard
-)
-from app.keyboards.inline.form_keyboard import confim_button
-from app.utils.format_form import format_user_form
 from app.database.models import save_user_data
+from app.keyboards.inline.form_keyboard import confim_button
+from app.keyboards.reply.form_keyboard import (education_level_button,
+                                               experience_button,
+                                               get_edit_fields_keyboard,
+                                               region_button)
+from app.states.state_user_form import FormStates
+from app.utils.format_form import format_user_form
+from app.utils.metrics import log_event
 
 router = Router()
 
@@ -74,6 +73,7 @@ async def confirm_form(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text("Спасибо! Анкета заполнена ✅")
     await state.clear()
     await callback.answer()
+    await log_event(user_id=callback.from_user.id, event_type="form_submit")
 
 @router.callback_query(F.data == "form_edit", FormStates.waiting_confirm)
 async def edit_form(callback: CallbackQuery, state: FSMContext):
@@ -111,7 +111,6 @@ async def receive_new_value(msg: Message, state: FSMContext):
 
     if field:
         await state.update_data({field: msg.text})
-        await msg.answer(f"Поле «{field}» обновлено ✅")
 
     data = await state.get_data()
     await msg.answer(format_user_form(data), reply_markup=confim_button())

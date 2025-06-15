@@ -1,13 +1,15 @@
 from aiogram import F, Router
-from aiogram.types import CallbackQuery, Message
 from aiogram.fsm.context import FSMContext
-
+from aiogram.types import CallbackQuery, Message
 from keyboards.inline.menu import (get_job_by_categories_menu,
                                    get_job_seeking_menu, get_main_menu)
-from services.vacancy_service import get_all_vacancies
+from services.vacancy_service import (get_all_vacancies,
+                                      get_vacancies_by_keywords_list,
+                                      get_vacancies_no_experience)
 from utils.vacancy_sender import send_vacancy_batch
-from services.vacancy_service import get_vacancies_by_keywords_list, get_vacancies_no_experience
+
 from app.keywords.categories_keywords import keywords
+from app.utils.metrics import log_event
 
 router = Router()
 
@@ -17,7 +19,10 @@ async def vacancies_by_keywords_handler(callback: CallbackQuery):
     await callback.answer()
     await callback.message.edit_text("Выберите подраздел", reply_markup=get_job_by_categories_menu())
 
+    await log_event(user_id=callback.from_user.id, event_type="categories_vacancies")
+
 from aiogram.fsm.context import FSMContext
+
 
 @router.callback_query(F.data.startswith("vacancies_"))
 async def vacancy_pagination_handler(callback: CallbackQuery, state: FSMContext):
@@ -40,18 +45,23 @@ async def vacancy_pagination_handler(callback: CallbackQuery, state: FSMContext)
 
     elif category == "management":
         vacancies = await get_vacancies_by_keywords_list(keywords['Руководители'], user_region)
+        await log_event(user_id=callback.from_user.id, event_type="managment")
 
     elif category == "engineering":
         vacancies = await get_vacancies_by_keywords_list(keywords['ИТР'], user_region)
+        await log_event(user_id=callback.from_user.id, event_type="engineering")
 
     elif category == "workers":
         vacancies = await get_vacancies_by_keywords_list(keywords['Рабочие'], user_region)
+        await log_event(user_id=callback.from_user.id, event_type="workers")
 
     elif category == "other":
         vacancies = await get_vacancies_by_keywords_list(keywords['Другие категории'], user_region)
+        await log_event(user_id=callback.from_user.id, event_type="other")
 
     elif category == "noexp":
         vacancies = await get_vacancies_no_experience(user_region)
+        await log_event(user_id=callback.from_user.id, event_type="no_experience")
 
     elif category == "keywords":
         user_keywords = user_data.get("keywords", ["инженер", "конструктор"])  # если задаётся вручную
