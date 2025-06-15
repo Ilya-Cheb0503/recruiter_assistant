@@ -1,7 +1,6 @@
-# app/handlers/form/agreement.py
 from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery, FSInputFile, Message
+from aiogram.types import CallbackQuery, FSInputFile
 
 from app.keyboards.agreement import get_agreement_kb
 from app.states.state_user_form import FormStates

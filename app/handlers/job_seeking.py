@@ -14,6 +14,19 @@ from app.utils.metrics import log_event
 router = Router()
 
 
+@router.callback_query(F.data.startswith("region_"))
+async def region_selected_handler(callback: CallbackQuery, state: FSMContext):
+    await callback.answer()
+
+    region = callback.data.replace("region_", "")
+    await state.update_data(region=region)  # сохраняем регион в FSM
+
+    await callback.message.edit_text(
+        f"Выбран регион: {region}\nТеперь выберите, как искать вакансии:",
+        reply_markup=get_job_seeking_menu()
+    )
+
+
 @router.callback_query(F.data == 'categories_vacancies')
 async def vacancies_by_keywords_handler(callback: CallbackQuery):
     await callback.answer()
@@ -21,7 +34,7 @@ async def vacancies_by_keywords_handler(callback: CallbackQuery):
 
     await log_event(user_id=callback.from_user.id, event_type="categories_vacancies")
 
-from aiogram.fsm.context import FSMContext
+
 
 
 @router.callback_query(F.data.startswith("vacancies_"))
