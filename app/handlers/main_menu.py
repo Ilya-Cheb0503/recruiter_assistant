@@ -27,14 +27,14 @@ async def job_search_handler(callback: CallbackQuery):
 @router.callback_query(F.data == 'about_company')
 async def about_company_handler(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text(CONTENT.get('about_company'), reply_markup=get_about_company_menu())
+    await callback.message.edit_text(CONTENT.get('about_company')[0], reply_markup=get_about_company_menu())
 
 
 # Обработчик кнопки "Частые вопросы"
 @router.callback_query(F.data == 'social_links')
 async def frequent_questions_handler(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text(CONTENT.get('social_links'), reply_markup=get_main_menu(callback.from_user.id))
+    await callback.message.edit_text(CONTENT.get('social_links')[0], reply_markup=get_main_menu(callback.from_user.id))
 
 
 # Обработчик кнопки "Отправить анкету"
@@ -54,4 +54,4 @@ async def job_search_handler(callback: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == 'contact_info')
 async def contact_info_handler(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.edit_text(CONTENT.get('contact_info'), reply_markup=get_main_menu(callback.from_user.id))
+    await callback.message.edit_text(CONTENT.get('contact_info')[0], reply_markup=get_main_menu(callback.from_user.id))

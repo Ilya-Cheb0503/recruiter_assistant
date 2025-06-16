@@ -10,6 +10,7 @@ from app.database.models import Metric
 from app.database.session import async_session
 from app.services.static_content import load_content, save_content
 from app.states.state_user_form import FormStates
+
 from aiogram.fsm.context import FSMContext
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types import Message
@@ -110,13 +111,12 @@ async def admin_panel_handler(callback: CallbackQuery):
 async def choose_content_to_edit(callback: CallbackQuery, state: FSMContext):
     if callback.from_user.id not in admin_ids:
         return await callback.answer("Нет доступа")
-
+    
     content = load_content()
-    keys = list(content.keys())
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text=k, callback_data=f"edit_content_{k}")]
-            for k in keys
+            [InlineKeyboardButton(text=value[1], callback_data=f"edit_content_{key}")]
+            for key, value in list(content.items())
         ]
     )
     await callback.message.edit_text("Что редактируем?", reply_markup=keyboard)
@@ -125,8 +125,12 @@ async def choose_content_to_edit(callback: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data.startswith("edit_content_"))
 async def ask_new_value(callback: CallbackQuery, state: FSMContext):
     key = callback.data.replace("edit_content_", "")
+
+    content = load_content()
+    key_name = content[key][1]
+
     await state.update_data(edit_key=key)
-    await callback.message.edit_text(f"Введите новое значение для «{key}»")
+    await callback.message.edit_text(f"Введите новое значение для «{key_name}»")
     await state.set_state(FormStates.waiting_for_new_content)
 
 
@@ -135,7 +139,8 @@ async def update_content_text(msg: Message, state: FSMContext):
     data = await state.get_data()
     key = data["edit_key"]
     content = load_content()
-    content[key] = msg.text
+    content[key][0] = msg.text
+    key_name = content[key][1]
     save_content(content)
-    await msg.answer(f"Содержимое «{key}» обновлено ✅")
+    await msg.answer(f"Содержимое «{key_name}» обновлено ✅")
     await state.clear()
