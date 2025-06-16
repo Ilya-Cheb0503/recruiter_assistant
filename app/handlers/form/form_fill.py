@@ -4,7 +4,7 @@ from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 
-from app.services.static_content import CONTENT
+from app.services.static_content import load_content
 from app.database.models import save_user_data
 from app.keyboards.inline.form_keyboard import confim_button
 from app.keyboards.inline.menu import get_main_menu
@@ -83,7 +83,8 @@ async def confirm_form(callback: CallbackQuery, state: FSMContext):
     await save_user_data(callback.from_user.id, **filtered_data)
     await callback.message.edit_text("Спасибо! Анкета заполнена ✅\nВозвращаем вас в Главное меню.")
     await asyncio.sleep(2)
-    await callback.message.edit_text(CONTENT.get('welcome_message'), reply_markup=get_main_menu(callback.from_user.id))
+    content = load_content()
+    await callback.message.edit_text(content.get('welcome_message'), reply_markup=get_main_menu(callback.from_user.id))
     await state.clear()
     await callback.answer()
     await log_event(user_id=callback.from_user.id, event_type="form_submit")
