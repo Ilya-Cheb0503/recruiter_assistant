@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta
+import asyncio
 
 from aiogram import F, Router
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.fsm.context import FSMContext
 from keyboards.inline.menu import get_admin_dashboard
 from sqlalchemy import distinct, func, select
 
@@ -11,9 +13,6 @@ from app.database.session import async_session
 from app.services.static_content import load_content, save_content
 from app.states.state_user_form import FormStates
 
-from aiogram.fsm.context import FSMContext
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.types import Message
 
 
 router = Router()
@@ -142,5 +141,7 @@ async def update_content_text(msg: Message, state: FSMContext):
     content[key][0] = msg.text
     key_name = content[key][1]
     save_content(content)
-    await msg.answer(f"Содержимое «{key_name}» обновлено ✅")
+    await msg.answer(f"Содержимое «{key_name}» обновлено ✅\nВозвращаем вас в Панель администратора.")
+    await asyncio.sleep(2)
+    await msg.answer("Панель администратора", reply_markup=get_admin_dashboard())
     await state.clear()
