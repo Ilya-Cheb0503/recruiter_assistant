@@ -19,7 +19,6 @@ async def start_cmd(msg: Message):
     await log_event(user_id=msg.from_user.id, event_type="start")
 
 
-
 @router.callback_query(F.data == 'main_menu')
 async def main_menu(callback: CallbackQuery):
     await callback.answer()
