@@ -13,7 +13,7 @@ router = Router()
 async def start_cmd(msg: Message):
     content = load_content()
     await msg.answer(
-        content.get('welcome_message'),
+        content.get('welcome_message')[0],
         reply_markup=get_main_menu(msg.from_user.id)
     )
     await log_event(user_id=msg.from_user.id, event_type="start")
@@ -25,7 +25,7 @@ async def main_menu(callback: CallbackQuery):
     await callback.answer()
     content = load_content()
     await callback.message.edit_text(
-        content.get('welcome_message'),
+        content.get('welcome_message')[0],
         reply_markup=get_main_menu(callback.from_user.id)
     )
 
