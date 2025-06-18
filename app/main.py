@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher
 
 from app.config import load_config
 from app.handlers import (about_company, admin, job_seeking, main_menu,
-                          start, vacancies_cards)
+                          start, vacancies_cards, incoming_message)
 from app.handlers.form import agreement, form_fill  # Импорт твоего роутера
 
 
@@ -21,5 +21,6 @@ async def main():
     dp.include_router(agreement.router)
     dp.include_router(vacancies_cards.router)
     dp.include_router(about_company.router)
+    dp.include_router(incoming_message.router)
 
     await dp.start_polling(bot)
