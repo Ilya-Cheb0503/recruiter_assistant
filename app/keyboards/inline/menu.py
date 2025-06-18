@@ -15,7 +15,7 @@ def get_main_menu(user_id: int) -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text="О компании", callback_data="about_company")],
         [InlineKeyboardButton(text="Отправь анкету", callback_data="submit_form")],
         [InlineKeyboardButton(text="Контактная информация", callback_data="contact_info")],
-        [InlineKeyboardButton(text="Соц сети", callback_data="social_links")]
+        [InlineKeyboardButton(text="Социальные сети", callback_data="social_links")]
     ]
 
     if user_id in ADMIN_IDS:
