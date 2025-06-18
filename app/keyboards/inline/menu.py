@@ -1,10 +1,12 @@
 import os
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from dotenv import load_dotenv
 
-load_dotenv()
-ADMIN_IDS = list(map(int, os.getenv("ADMINS", "").split(",")))
+from app.config import load_config
+
+
+config = load_config()
+ADMIN_IDS = list(map(int, config['ADMINS'].split(',')))
 
 
 def get_main_menu(user_id: int) -> InlineKeyboardMarkup:
