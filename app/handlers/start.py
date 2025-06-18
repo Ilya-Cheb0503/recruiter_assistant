@@ -1,10 +1,10 @@
 from aiogram import F, Router
 from aiogram.types import Message
 from aiogram.types import Message, CallbackQuery
+
 from keyboards.inline.menu import get_main_menu
 from app.services.static_content import load_content
 from keyboards.inline.menu import get_main_menu
-
 from app.utils.metrics import log_event
 
 router = Router()
