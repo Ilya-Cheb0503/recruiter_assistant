@@ -116,7 +116,7 @@ async def choose_content_to_edit(callback: CallbackQuery, state: FSMContext):
         inline_keyboard=[
             [InlineKeyboardButton(text=value[1], callback_data=f"edit_content_{key}")]
             for key, value in list(content.items())
-        ]
+        ] + [[InlineKeyboardButton(text="🔙Назад", callback_data="admin_panel")]]
     )
     await callback.message.edit_text("Что редактируем?", reply_markup=keyboard)
 
@@ -141,7 +141,5 @@ async def update_content_text(msg: Message, state: FSMContext):
     content[key][0] = msg.text
     key_name = content[key][1]
     save_content(content)
-    await msg.answer(f"Содержимое «{key_name}» обновлено ✅")
-    await asyncio.sleep(2)
-    await msg.answer("Панель администратора", reply_markup=get_admin_dashboard())
+    await msg.answer(f"Содержимое «{key_name}» обновлено ✅", reply_markup=get_admin_dashboard())
     await state.clear()
