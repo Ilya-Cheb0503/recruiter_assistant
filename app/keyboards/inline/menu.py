@@ -1,10 +1,12 @@
 import os
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from dotenv import load_dotenv
 
-load_dotenv()
-ADMIN_IDS = list(map(int, os.getenv("ADMINS", "").split(",")))
+from app.config import load_config
+
+
+config = load_config()
+ADMIN_IDS = list(map(int, config['ADMINS'].split(',')))
 
 
 def get_main_menu(user_id: int) -> InlineKeyboardMarkup:
@@ -13,7 +15,7 @@ def get_main_menu(user_id: int) -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text="О компании", callback_data="about_company")],
         [InlineKeyboardButton(text="Отправь анкету", callback_data="submit_form")],
         [InlineKeyboardButton(text="Контактная информация", callback_data="contact_info")],
-        [InlineKeyboardButton(text="Соц сети", callback_data="social_links")]
+        [InlineKeyboardButton(text="Социальные сети", callback_data="social_links")]
     ]
 
     if user_id in ADMIN_IDS:
