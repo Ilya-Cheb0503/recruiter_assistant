@@ -107,7 +107,7 @@ async def admin_panel_handler(callback: CallbackQuery):
 
 
 @router.callback_query(F.data == "edit_static_text")
-async def choose_content_to_edit(callback: CallbackQuery, state: FSMContext):
+async def choose_content_to_edit(callback: CallbackQuery):
     if callback.from_user.id not in admin_ids:
         return await callback.answer("Нет доступа")
     

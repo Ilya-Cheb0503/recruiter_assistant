@@ -15,4 +15,4 @@ class FormStates(StatesGroup):
     waiting_field_value = State()        # Пользователь вводит новое значение поля
     waiting_main_menu = State()          # Переход в главное меню после подтверждения верности анкеты
 
-    waiting_for_new_content = State()  # Ожидание нового контента от администратора
+    waiting_for_new_content = State()    # Ожидание нового контента от администратора
