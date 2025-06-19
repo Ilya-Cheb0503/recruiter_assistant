@@ -84,7 +84,7 @@ async def confirm_form(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text("Спасибо! Анкета заполнена ✅\nВозвращаем вас в Главное меню.")
     await asyncio.sleep(2)
     content = load_content()
-    await callback.message.edit_text(content.get('welcome_message'), reply_markup=get_main_menu(callback.from_user.id))
+    await callback.message.edit_text(content.get('welcome_message')[0], reply_markup=get_main_menu(callback.from_user.id))
     await state.clear()
     await callback.answer()
     await log_event(user_id=callback.from_user.id, event_type="form_submit")

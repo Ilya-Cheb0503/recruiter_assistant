@@ -28,7 +28,7 @@ async def job_search_handler(callback: CallbackQuery):
 async def about_company_handler(callback: CallbackQuery):
     await callback.answer()
     content = load_content()
-    await callback.message.edit_text(content.get('about_company'), reply_markup=get_about_company_menu())
+    await callback.message.edit_text(content.get('about_company')[0], reply_markup=get_about_company_menu())
 
 
 # Обработчик кнопки "Частые вопросы"
@@ -36,7 +36,7 @@ async def about_company_handler(callback: CallbackQuery):
 async def frequent_questions_handler(callback: CallbackQuery):
     await callback.answer()
     content = load_content()
-    await callback.message.edit_text(content.get('social_links'), reply_markup=get_main_menu(callback.from_user.id))
+    await callback.message.edit_text(content.get('social_links')[0], reply_markup=get_main_menu(callback.from_user.id))
 
 
 # Обработчик кнопки "Отправить анкету"
@@ -57,4 +57,4 @@ async def job_search_handler(callback: CallbackQuery, state: FSMContext):
 async def contact_info_handler(callback: CallbackQuery):
     await callback.answer()
     content = load_content()
-    await callback.message.edit_text(content.get('contact_info'), reply_markup=get_main_menu(callback.from_user.id))
+    await callback.message.edit_text(content.get('contact_info')[0], reply_markup=get_main_menu(callback.from_user.id))

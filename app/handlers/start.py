@@ -1,10 +1,10 @@
 from aiogram import F, Router
 from aiogram.types import Message
 from aiogram.types import Message, CallbackQuery
+
 from keyboards.inline.menu import get_main_menu
 from app.services.static_content import load_content
 from keyboards.inline.menu import get_main_menu
-
 from app.utils.metrics import log_event
 
 router = Router()
@@ -13,11 +13,10 @@ router = Router()
 async def start_cmd(msg: Message):
     content = load_content()
     await msg.answer(
-        content.get('welcome_message'),
+        content.get('welcome_message')[0],
         reply_markup=get_main_menu(msg.from_user.id)
     )
     await log_event(user_id=msg.from_user.id, event_type="start")
-
 
 
 @router.callback_query(F.data == 'main_menu')
@@ -25,7 +24,7 @@ async def main_menu(callback: CallbackQuery):
     await callback.answer()
     content = load_content()
     await callback.message.edit_text(
-        content.get('welcome_message'),
+        content.get('welcome_message')[0],
         reply_markup=get_main_menu(callback.from_user.id)
     )
 

@@ -11,18 +11,18 @@ router = Router()
 async def advantages_handler(callback: CallbackQuery):
     await callback.answer()
     content = load_content()
-    await callback.message.edit_text(content.get('advantages'), reply_markup=get_about_company_menu())
+    await callback.message.edit_text(content.get('advantages')[0], reply_markup=get_about_company_menu())
 
 
 @router.callback_query(F.data == 'company_enterprises')
 async def company_enterprises_handler(callback: CallbackQuery):
     await callback.answer()
     content = load_content()
-    await callback.message.edit_text(content.get('company_enterprises'), reply_markup=get_about_company_menu())
+    await callback.message.edit_text(content.get('company_enterprises')[0], reply_markup=get_about_company_menu())
 
 
 @router.callback_query(F.data == 'main_directions')
 async def main_directions_handler(callback: CallbackQuery):
     await callback.answer()
     content = load_content()
-    await callback.message.edit_text(content.get('main_directions'), reply_markup=get_about_company_menu())
+    await callback.message.edit_text(content.get('main_directions')[0], reply_markup=get_about_company_menu())
