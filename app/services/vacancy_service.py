@@ -23,13 +23,15 @@ async def get_all_vacancies(region: str = "Москва") -> list[Vacancy]:
 
 async def get_vacancies_by_keyword_and_region(keyword: str, region: str):
     async with async_session() as session:
+        filters = or_(
+            *[func.lower(func.coalesce(Vacancy.title, '')).like(f"%{keyword.lower()}%")],
+            *[func.lower(func.coalesce(Vacancy.requirements, '')).like(f"%{keyword.lower()}%")],
+            *[func.lower(func.coalesce(Vacancy.responsibilities, '')).like(f"%{keyword.lower()}%")],
+        )
+
         stmt = select(Vacancy).where(
-            func.lower(Vacancy.region).like(f"%{region.lower()}%"),
-            or_(
-                func.lower(Vacancy.title).like(f"%{keyword.lower()}%"),
-                func.lower(Vacancy.requirements).like(f"%{keyword.lower()}%"),
-                func.lower(Vacancy.responsibilities).like(f"%{keyword.lower()}%")
-            )
+            Vacancy.region.ilike(f"%{region}%"),
+            filters
         )
         result = await session.execute(stmt)
         return result.scalars().all()
