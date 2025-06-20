@@ -4,7 +4,6 @@ from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 
-from app.services.static_content import load_content
 from app.database.models import save_user_data
 from app.keyboards.inline.form_keyboard import confim_button
 from app.keyboards.inline.menu import get_main_menu
@@ -12,9 +11,11 @@ from app.keyboards.reply.form_keyboard import (education_level_button,
                                                experience_button,
                                                get_edit_fields_keyboard,
                                                region_button)
+from app.services.static_content import load_content
 from app.states.state_user_form import FormStates
 from app.utils.format_form import format_user_form
 from app.utils.metrics import log_event
+from app.utils.validators import is_valid_email, is_valid_phone
 
 router = Router()
 
@@ -28,13 +29,19 @@ async def get_name(msg: Message, state: FSMContext):
 
 @router.message(FormStates.waiting_phone)
 async def get_phone_number(msg: Message, state: FSMContext):
+    if not is_valid_phone(msg.text):
+        await msg.answer("❗️Неверный формат номера телефона.\nПожалуйста, укажите Ваш контактный номер телефона в формате +7-***-***-**-**")
+        return
     await state.update_data(phone=msg.text)
-    await msg.answer('Ваш электронный адрес:')
+    await msg.answer("Пожалуйста, укажите Ваш электронный адрес в формате ivanov.ivan@mail.ru")
     await state.set_state(FormStates.waiting_email)
 
 
 @router.message(FormStates.waiting_email)
 async def get_email(msg: Message, state: FSMContext):
+    if not is_valid_email(msg.text):
+        await msg.answer("❗️Неверный формат электронного адреса.\nПожалуйста, укажите email в формате ivanov.ivan@mail.ru")
+        return
     await state.update_data(email=msg.text)
     await msg.answer('Выбранный регион поиска:', reply_markup=region_button())
     await state.set_state(FormStates.waiting_region)
@@ -136,11 +143,19 @@ async def receive_new_value(msg: Message, state: FSMContext):
     data = await state.get_data()
     field = data.get("current_edit_field")
 
-    if field:
-        await state.update_data({field: msg.text})
+    if not field:
+        return await msg.answer("Произошла ошибка. Попробуйте снова.")
 
-    data = await state.get_data()
-    await msg.answer(format_user_form(data), reply_markup=confim_button())
+    # Валидация email и телефона при редактировании
+    if field == "phone" and not is_valid_phone(msg.text):
+        return await msg.answer("❗️Неверный формат номера телефона.\nПожалуйста, укажите номер в формате +7-***-***-**-**")
+
+    if field == "email" and not is_valid_email(msg.text):
+        return await msg.answer("❗️Неверный формат email.\nПожалуйста, укажите адрес в формате ivanov.ivan@mail.ru")
+
+    await state.update_data({field: msg.text})
+    updated_data = await state.get_data()
+    await msg.answer(format_user_form(updated_data), reply_markup=confim_button())
     await state.set_state(FormStates.waiting_confirm)
 
 
