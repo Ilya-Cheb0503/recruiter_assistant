@@ -16,3 +16,7 @@ class FormStates(StatesGroup):
     waiting_main_menu = State()          # Переход в главное меню после подтверждения верности анкеты
 
     waiting_for_new_content = State()    # Ожидание нового контента от администратора
+
+    waiting_for_region = State()
+    waiting_check_region = State()
+    vacansies_transmission = State()
